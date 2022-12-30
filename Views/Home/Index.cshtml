@@ -1,0 +1,33 @@
+﻿@section Css {
+    <link rel="stylesheet" href="~/css/areas/default/home/index.css" asp-append-version="true" />
+}
+
+<div id="download-section">
+    <form method="post" enctype="multipart/form-data" asp-antiforgery="true" asp-area="" asp-controller="Home" asp-action="Download">
+        <input id="download-url" name="download-url" type="url" placeholder="Type the url here" />
+
+        <div class="accordion-menu">
+            <ul>
+                <li>
+                    <input type="checkbox" checked>
+                    <i class="arrow"></i>
+                    <h2>Advanced Options</h2>
+                    <div class="accordion-content">
+                        <div class="element">
+                            <div class="headers">
+                                <hr />
+                                <h3>Headers</h3>
+                                <div class="sub-element">
+                                    <label for="header">Url</label>
+                                    <input name="header" type="url" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+
+        <button type="submit">Download</button>
+    </form>
+</div>

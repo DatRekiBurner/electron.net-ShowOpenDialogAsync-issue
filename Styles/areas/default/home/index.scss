@@ -1,0 +1,43 @@
+@use '../../../breakpoints.scss' as *;
+@use '../../../theme.scss' as *;
+
+html {
+    body {
+        #main-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            main {
+                #download-section {
+                    width: 80vw;
+
+                    form {
+                        display: flex;
+                        flex-direction: column;
+                        justify-content: center;
+                        gap: 1.25em;
+
+                        #download-url {
+                            border: 1px solid black;
+                        }
+
+                        button {
+                            background-color: $nav;
+                            border: 1px solid black;
+                            color: $nav-text;
+                            padding: 1.5em;
+                            font-weight: 400;
+                            font-size: large;
+
+                            &:focus,
+                            &:hover {
+                                color: $nav-text-hover;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

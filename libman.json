@@ -1,0 +1,33 @@
+{
+  "version": "1.0",
+  "defaultProvider": "jsdelivr",
+  "libraries": [
+    {
+      "provider": "jsdelivr",
+      "library": "@loadingio/loading-bar@0.1.1",
+      "destination": "wwwroot/lib/loadingio/loading-bar/",
+      "files": [
+        "LICENSE",
+        "dist/loading-bar.css",
+        "dist/loading-bar.js",
+        "dist/loading-bar.min.css",
+        "dist/loading-bar.min.js",
+        "dist/loading-bar.zip"
+      ]
+    },
+    {
+      "provider": "jsdelivr",
+      "library": "jquery@3.6.3",
+      "destination": "wwwroot/lib/jquery/",
+      "files": [
+        "LICENSE.txt",
+        "dist/jquery.js",
+        "dist/jquery.min.js",
+        "dist/jquery.min.map",
+        "dist/jquery.slim.js",
+        "dist/jquery.slim.min.js",
+        "dist/jquery.slim.min.map"
+      ]
+    }
+  ]
+}

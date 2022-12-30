@@ -1,0 +1,33 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <!-- Other CSS -->
+    @RenderSection("Css", false)
+</head>
+<body>
+    <header>
+        <nav class="">
+            <div class="nav-element">
+                <a asp-area="" asp-controller="Home" asp-action="Index">Test</a>
+            </div>
+        </nav>
+    </header>
+    <div id="main-container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="">
+        <a>Footer</a>
+    </footer>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <!-- Other Javascript -->
+    @RenderSection("Js", false)
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
