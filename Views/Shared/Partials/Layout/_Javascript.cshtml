@@ -1,0 +1,13 @@
+﻿<!-- General -->
+<script src="~/js/site.js" asp-append-version="true"></script>
+<!-- Libraries -->
+<environment include="Development">
+	@* Development *@
+	<script src="~/lib/accordion-js/dist/accordion.js"></script>
+	<script src=""></script>
+</environment>
+<environment exclude="Development">
+	@* Production *@
+	<script src="~/lib/accordion-js/dist/accordion.min.js"></script>
+	<script src=""></script>
+</environment>

@@ -4,7 +4,8 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"]</title>
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <!-- CSS -->
+    <partial name="~/Views/Shared/Partials/Layout/_Css.cshtml" />
     <!-- Other CSS -->
     @RenderSection("Css", false)
 </head>
@@ -25,7 +26,8 @@
     <footer class="">
         <a>Footer</a>
     </footer>
-    <script src="~/js/site.js" asp-append-version="true"></script>
+    <!-- Javascript -->
+    <partial name="~/Views/Shared/Partials/Layout/_Javascript.cshtml" />
     <!-- Other Javascript -->
     @RenderSection("Js", false)
     @await RenderSectionAsync("Scripts", required: false)

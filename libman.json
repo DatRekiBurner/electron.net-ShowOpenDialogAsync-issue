@@ -3,7 +3,6 @@
   "defaultProvider": "jsdelivr",
   "libraries": [
     {
-      "provider": "jsdelivr",
       "library": "@loadingio/loading-bar@0.1.1",
       "destination": "wwwroot/lib/loadingio/loading-bar/",
       "files": [
@@ -16,7 +15,6 @@
       ]
     },
     {
-      "provider": "jsdelivr",
       "library": "jquery@3.6.3",
       "destination": "wwwroot/lib/jquery/",
       "files": [
@@ -27,6 +25,17 @@
         "dist/jquery.slim.js",
         "dist/jquery.slim.min.js",
         "dist/jquery.slim.min.map"
+      ]
+    },
+    {
+      "library": "accordion-js@3.3.2",
+      "destination": "wwwroot/lib/accordion-js/",
+      "files": [
+        "LICENSE",
+        "dist/accordion.css",
+        "dist/accordion.js",
+        "dist/accordion.min.css",
+        "dist/accordion.min.js"
       ]
     }
   ]

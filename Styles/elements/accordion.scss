@@ -1,0 +1,44 @@
+.accordion-container {
+    .ac {
+        .ac-panel {
+            #advanced-options {
+                ul {
+                    list-style: none;
+
+                    li {
+                        ul {
+                            .single-item,
+                            .double-items {
+                                display: grid;
+                                padding: 0 1em 0 0;
+                            }
+
+                            .single-item {
+                                grid-template-columns: 10% 90%;                             
+                            }
+
+                            .double-items {
+                                grid-template-columns: 50% 50%;
+
+                                div {
+                                    display: flex;
+                                    justify-content: space-between;
+
+                                    label {
+                                        &:first-child {
+                                            margin-left: 0.5em;
+                                        }
+                                    }
+
+                                    input {
+                                        width: 80%;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

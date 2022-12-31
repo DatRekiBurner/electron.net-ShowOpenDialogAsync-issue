@@ -1,0 +1,17 @@
+﻿<!-- General -->
+<link rel="stylesheet" href="~/css/site.css" />
+<!-- Navigation -->
+<link rel="stylesheet" href="" />
+<!-- Elements -->
+<link rel="stylesheet" href="~/css/elements/accordion.css" />
+<!-- Libraries -->
+<environment include="Development">
+	@* Development *@
+	<link rel="stylesheet" href="~/lib/accordion-js/dist/accordion.css" />
+	<link rel="stylesheet" href="" />
+</environment>
+<environment exclude="Development">
+	@* Production *@
+	<link rel="stylesheet" href="~/lib/accordion-js/dist/accordion.min.css" />
+	<link rel="stylesheet" href="" />
+</environment>

@@ -2,30 +2,77 @@
     <link rel="stylesheet" href="~/css/areas/default/home/index.css" asp-append-version="true" />
 }
 
+@section Js {
+    <script>
+        new Accordion('.accordion-container');
+    </script>
+}
+
 <div id="download-section">
     <form method="post" enctype="multipart/form-data" asp-antiforgery="true" asp-area="" asp-controller="Home" asp-action="Download">
-        <input id="download-url" name="download-url" type="url" placeholder="Type the url here" />
+        <input id="download-url" name="download-url" type="url" min="4" placeholder="Type the url here" required />
+        <!-- <input id="directory" name="directory" type="file" webkitdirectory="true" directory /> -->
 
-        <div class="accordion-menu">
-            <ul>
-                <li>
-                    <input type="checkbox" checked>
-                    <i class="arrow"></i>
-                    <h2>Advanced Options</h2>
-                    <div class="accordion-content">
-                        <div class="element">
-                            <div class="headers">
-                                <hr />
+        <!-- https://github.com/michu2k/Accordion -->
+        <!-- Advanced options -->
+        <div class="accordion-container">
+            <div class="ac">
+                <h2 class="ac-header">
+                    <button type="button" class="ac-trigger">Advanced Options</button>
+                </h2>
+                <div class="ac-panel">
+                    <div id="advanced-options">
+                        <ul>
+                            <!-- General options -->
+                            <li>
+                                <h3>General</h3>
+                                <ul id="general-options">
+                                    <li class="single-item">
+                                        <label for="request-type">Request type</label>
+                                        <select id="request-type" name="request-type">
+                                            <option value="Get" selected>Get</option>
+                                            <option value="Post">Post</option>
+                                            <option value="Put">Put</option>
+                                            <option value="Patch">Patch</option>
+                                            <option value="Delete">Delete</option>
+                                        </select>
+                                    </li>
+                                    <li class="single-item">
+                                        <label for="timeout">Timeout</label>
+                                        <input id="timeout" name="timeout" type="number" min="30" placeholder="Timeout in seconds." />
+                                    </li>
+                                </ul>
+                            </li>
+                            <!-- Header options -->
+                            <li>
                                 <h3>Headers</h3>
-                                <div class="sub-element">
-                                    <label for="header">Url</label>
-                                    <input name="header" type="url" />
-                                </div>
-                            </div>
-                        </div>
+                                <ul id="header-options">
+                                    <li class="double-items">
+                                        <div class="header-key">
+                                            <label for="header-key">Key</label>
+                                            <input name="header-key" type="text" />
+                                        </div>
+                                        <div class="header-value">
+                                            <label for="header-value">Value</label>
+                                            <input name="header-value" type="text" />
+                                        </div>
+                                    </li>
+                                    <li class="double-items">
+                                        <div class="header-key">
+                                            <label for="header-key">Key</label>
+                                            <input name="header-key" type="text" />
+                                        </div>
+                                        <div class="header-value">
+                                            <label for="header-value">Value</label>
+                                            <input name="header-value" type="text" />
+                                        </div>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
                     </div>
-                </li>
-            </ul>
+                </div>
+            </div>
         </div>
 
         <button type="submit">Download</button>
