@@ -1,4 +1,5 @@
 using ElectronNET.API;
+using ElectronNET.API.Entities;
 
 namespace Downloader
 {
@@ -54,8 +55,9 @@ namespace Downloader
             int min = 512;
             BrowserWindow window = await Electron.WindowManager.CreateWindowAsync();
 
-            window.RemoveMenu();
-            window.SetMinimumSize(min, min);
+            window.SetTitle("Downloader");
+            //window.RemoveMenu();
+            //window.SetMinimumSize(min, min);
             window.OnClosed += () => Electron.App.Quit();
         }
     }

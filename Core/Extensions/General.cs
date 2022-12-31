@@ -31,7 +31,7 @@ namespace Downloader.Core.Extensions
         {
 
             if (ContentType != null && ContentType.MediaType != null)
-                return ContentType.MediaType;
+                return ContentType.MediaType; //.Replace('\', @"/");
 
             return string.Empty;
         }

@@ -1,9 +1,13 @@
 ﻿using Downloader.Core.Extensions;
 using Downloader.Models;
+using ElectronNET.API;
+using ElectronNET.API.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Extensions.Primitives;
+using MimeTypes;
 using Newtonsoft.Json.Linq;
+using System;
 using System.Diagnostics;
 using System.Net.Http.Handlers;
 
@@ -13,10 +17,6 @@ namespace Downloader.Controllers
     {
         private readonly ILogger<HomeController> _logger;
 
-        private static readonly HttpClientHandler _handler = new() { AllowAutoRedirect = true };
-        private static readonly ProgressMessageHandler _progressHandler = new(_handler);
-        private static readonly HttpClient _client = new(_progressHandler);
-
         public HomeController(ILogger<HomeController> logger)
         {
             _logger = logger;
@@ -24,13 +24,39 @@ namespace Downloader.Controllers
 
         public IActionResult Index()
         {
+            if (HybridSupport.IsElectronActive)
+            {
+                Electron.IpcMain.On("select-directory", async (args) =>
+                {
+                    var mainWindow = Electron.WindowManager.BrowserWindows.First();
+                    var options = new OpenDialogOptions
+                    {
+                        Properties = new OpenDialogProperty[]
+                        {
+                            OpenDialogProperty.openFile,
+                            OpenDialogProperty.openDirectory
+                        }
+                    };
+
+                    string[] files = await Electron.Dialog.ShowOpenDialogAsync(mainWindow, options);
+                    Electron.IpcMain.Send(mainWindow, "select-directory-reply", files);
+                });
+            }
+
             return View();
         }
 
         [HttpPost]
         public async Task<IActionResult> Download()
         {
-            string url = Request.Form["download-url"].ToString();
+            Uri url = new(Request.Form["download-url"].ToString(), UriKind.Absolute);
+            // The path of where the file will be saved.
+            string path = Request.Form["selected-directory"].ToString();
+            Console.WriteLine($"Path: {path}");
+
+            HttpClientHandler handler = new() { AllowAutoRedirect = true };
+            ProgressMessageHandler progressHandler = new(handler);
+            using HttpClient client = new(progressHandler);
 
             Dictionary<string, string> headers = new();
             List<string> headerKeys = Request.Form["header-key"].ConvertToList();
@@ -62,31 +88,32 @@ namespace Downloader.Controllers
                 timeout = TimeSpan.FromSeconds(time);
 
             // Get progress from download/upload.
-            _progressHandler.HttpSendProgress += new EventHandler<HttpProgressEventArgs>(HttpProgress);
-            _progressHandler.HttpReceiveProgress += new EventHandler<HttpProgressEventArgs>(HttpProgress);
+            progressHandler.HttpSendProgress += new EventHandler<HttpProgressEventArgs>(HttpProgress);
+            progressHandler.HttpReceiveProgress += new EventHandler<HttpProgressEventArgs>(HttpProgress);
 
             // Set timeout duration.
-            _client.Timeout = timeout;
+            client.Timeout = timeout;
 
             // Send request.
-            HttpResponseMessage result = await _client.SendAsync(requestMessage);
+            HttpResponseMessage result = await client.SendAsync(requestMessage);
 
             // Figure out what extension to use for the content we're about to download.
-            string extension = result.Content.Headers.ContentType.GetMediaType() switch
-            {
-                @"image\jpeg" => ".jpg",
-                _ => ".file",
-            };
+            string extension = MimeTypeMap.GetExtension(result.Content.Headers.ContentType.GetMediaType());
+            // Update path to include filename/extension.
+            path = Path.Combine(path, Path.GetFileNameWithoutExtension(url.LocalPath) + extension);
 
-            // Path for where we download the file
-            string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments).ToString(), $"download{extension}");
-            // Write downloaded content to the file
-            System.IO.File.WriteAllText(path, await result.Content.ReadAsStringAsync());
+            // Create stream from content
+            using Stream content = await result.Content.ReadAsStreamAsync();
+            // Create new file stream.
+            using FileStream file = new(path, FileMode.Create);
+            // Steam content to file.
+            await content.CopyToAsync(file);
 
+            Console.WriteLine($"Downloaded file to: {path}");
 
             // To do:
             // Make download happen in a seperate thread.
-            // Add more extensions based on MIME type `https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types`.
+            // Add more extensions based on MIME type `https://www.iana.org/assignments/media-types/media-types.xhtml`.
             // Allow user to select location the file is saved to.
             // Implement progress bar with `https://www.jsdelivr.com/package/npm/@loadingio/loading-bar`.
             // Update progress bar with Ajax.

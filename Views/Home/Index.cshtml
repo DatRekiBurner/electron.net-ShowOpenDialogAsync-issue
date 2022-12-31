@@ -2,16 +2,11 @@
     <link rel="stylesheet" href="~/css/areas/default/home/index.css" asp-append-version="true" />
 }
 
-@section Js {
-    <script>
-        new Accordion('.accordion-container');
-    </script>
-}
-
 <div id="download-section">
-    <form method="post" enctype="multipart/form-data" asp-antiforgery="true" asp-area="" asp-controller="Home" asp-action="Download">
+    <button id="select-directory">View Demo</button>
+    
+    <form id="download-form" method="post" enctype="multipart/form-data" asp-antiforgery="true" asp-area="" asp-controller="Home" asp-action="Download">
         <input id="download-url" name="download-url" type="url" min="4" placeholder="Type the url here" required />
-        <!-- <input id="directory" name="directory" type="file" webkitdirectory="true" directory /> -->
 
         <!-- https://github.com/michu2k/Accordion -->
         <!-- Advanced options -->
@@ -75,6 +70,12 @@
             </div>
         </div>
 
-        <button type="submit">Download</button>
+        <!-- Hidden values -->
+        <div class="hide">
+            <span id="selected-directory-text" class="hide"></span>
+            <input id="selected-directory" name="selected-directory" />
+        </div>
+
+        <button id="submit-download" onclick="download();">Download</button>
     </form>
 </div>
