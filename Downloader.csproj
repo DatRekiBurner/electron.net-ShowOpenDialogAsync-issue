@@ -7,6 +7,7 @@
 	<ItemGroup>
 		<PackageReference Include="AspNetCore.SassCompiler" Version="1.57.1" />
 		<PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="5.2.9" />
+		<PackageReference Include="Microsoft.Web.LibraryManager.Build" Version="2.1.175" />
 		<PackageReference Include="MimeTypeMapOfficial" Version="1.0.17" />
 		<PackageReference Include="ElectronNET.API" Version="13.5.1" />
 		<PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="5.0.17" />
