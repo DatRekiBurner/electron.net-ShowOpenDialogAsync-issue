@@ -1,5 +1,12 @@
 using ElectronNET.API;
-using ElectronNET.API.Entities;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Downloader
 {
@@ -7,58 +14,15 @@ namespace Downloader
     {
         public static void Main(string[] args)
         {
-            var builder = WebApplication.CreateBuilder(args);
-
-            // Configure webhost.
-            builder.WebHost.UseElectron(args);
-
-            // Add services to the container.
-            builder.Services.AddControllersWithViews();
-
-#if DEBUG
-            // Compile SASS to CSS.
-            builder.Services.AddSassCompiler();
-#endif
-
-            var app = builder.Build();
-
-            // Configure the HTTP request pipeline.
-            if (!app.Environment.IsDevelopment())
-            {
-                app.UseExceptionHandler("/Home/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-                app.UseHsts();
-            }
-
-            app.UseHttpsRedirection();
-            app.UseStaticFiles();
-
-            app.UseRouting();
-
-            app.UseAuthorization();
-
-            app.MapControllerRoute(
-                name: "default",
-                pattern: "{controller=Home}/{action=Index}/{id?}");
-
-            if (HybridSupport.IsElectronActive)
-                CreateElectronWindow();
-
-            app.Run();
+            CreateHostBuilder(args).Build().Run();
         }
 
-        /// <summary>
-        /// Create a electron window and set it's settings.
-        /// </summary>
-        static async void CreateElectronWindow()
-        {
-            int min = 512;
-            BrowserWindow window = await Electron.WindowManager.CreateWindowAsync();
-
-            window.SetTitle("Downloader");
-            //window.RemoveMenu();
-            //window.SetMinimumSize(min, min);
-            window.OnClosed += () => Electron.App.Quit();
-        }
+        public static IHostBuilder CreateHostBuilder(string[] args) =>
+            Host.CreateDefaultBuilder(args)
+                .ConfigureWebHostDefaults(webBuilder =>
+                {
+                    webBuilder.UseElectron(args);
+                    webBuilder.UseStartup<Startup>();
+                });
     }
 }

@@ -2,9 +2,34 @@
     <link rel="stylesheet" href="~/css/areas/default/home/index.css" asp-append-version="true" />
 }
 
+@section Js {
+    <script>
+        //new Accordion('.accordion-container');
+
+        (function () {
+            const { ipcRenderer } = require("electron");
+
+            document.getElementById("select-directory").addEventListener("click", () => {
+                ipcRenderer.send("select-directory");
+            });
+
+            ipcRenderer.on("select-directory-reply", (sender, path) => {
+                document.getElementById("selected-directory").innerText = `${path}`;
+            });
+        }());
+
+        function checkValues() {
+            const text = document.getElementById("selected-directory").innerText;
+            document.getElementById("location").value = text;
+            document.getElementById('download-form').submit();
+        }
+    </script>
+}
+
 <div id="download-section">
-    <button id="select-directory">View Demo</button>
+    <button class="demo-button" id="select-directory">Select location</button>
     
+
     <form id="download-form" method="post" enctype="multipart/form-data" asp-antiforgery="true" asp-area="" asp-controller="Home" asp-action="Download">
         <input id="download-url" name="download-url" type="url" min="4" placeholder="Type the url here" required />
 
@@ -72,10 +97,10 @@
 
         <!-- Hidden values -->
         <div class="hide">
-            <span id="selected-directory-text" class="hide"></span>
-            <input id="selected-directory" name="selected-directory" />
+            <span id="selected-directory"></span>
+            <input id="location" name="location" />
         </div>
 
-        <button id="submit-download" onclick="download();">Download</button>
+        <button id="submit-download" onclick="checkValues();">Download</button>
     </form>
 </div>

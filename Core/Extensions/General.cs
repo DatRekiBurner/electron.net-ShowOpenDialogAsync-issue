@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Primitives;
+using System.Collections.Generic;
 using System.Net.Http.Headers;
 
 namespace Downloader.Core.Extensions
