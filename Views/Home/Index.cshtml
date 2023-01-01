@@ -8,10 +8,12 @@
             const { ipcRenderer } = require("electron");
 
             document.getElementById("select-directory").addEventListener("click", () => {
+                console.log("two");
                 ipcRenderer.send("select-directory");
             });
 
             ipcRenderer.on("select-directory-reply", (sender, path) => {
+                console.log("three");
                 document.getElementById("selected-directory").innerText = `${path}`;
             });
         }());

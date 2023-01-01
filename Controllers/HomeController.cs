@@ -30,6 +30,7 @@ namespace Downloader.Controllers
         {
             if (HybridSupport.IsElectronActive)
             {
+                Console.WriteLine($"one");
                 Electron.IpcMain.On("select-directory", async (args) =>
                 {
                     BrowserWindow mainWindow = Electron.WindowManager.BrowserWindows.First();
@@ -41,7 +42,7 @@ namespace Downloader.Controllers
                         }
                     };
 
-                    string[] path = await Electron.Dialog.ShowOpenDialogAsync(mainWindow, options);
+                    string path = (await Electron.Dialog.ShowOpenDialogAsync(mainWindow, options)).First();
                     Electron.IpcMain.Send(mainWindow, "select-directory-reply", path);
                 });
             }
@@ -124,7 +125,7 @@ namespace Downloader.Controllers
             // Implement progress bar with `https://www.jsdelivr.com/package/npm/@loadingio/loading-bar`.
             // Update progress bar with Ajax.
 
-            return View();
+            return RedirectToAction("index", "home");
         }
 
         private void HttpProgress(object? sender, HttpProgressEventArgs e)
