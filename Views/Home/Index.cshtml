@@ -2,12 +2,7 @@
     <link rel="stylesheet" href="~/css/areas/default/home/index.css" asp-append-version="true" />
 }
 
-@section Js {
-    <script type="module">
-        import Accordion from '/lib/accordion-js/dist/accordion.js';
-
-        new Accordion('.accordion-container');
-    </script>
+@section Electron {
     <script>
         (function () {
             const { ipcRenderer } = require("electron");
@@ -20,6 +15,12 @@
                 document.getElementById("selected-directory").innerText = `${path}`;
             });
         }());
+    </script>
+}
+
+@section Js {
+    <script>
+        new Accordion('.accordion-container');
 
         function checkValues() {
             const text = document.getElementById("selected-directory").innerText;

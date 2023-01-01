@@ -1,4 +1,11 @@
-﻿<!-- Libraries -->
+﻿<!-- Rename Electron symbols -->
+<script>
+	window.nodeRequire = require;
+	delete window.require;
+	delete window.exports;
+	delete window.module;
+</script>
+<!-- Libraries -->
 <environment include="Development">
 	@* Development *@
 	<script src="~/lib/accordion-js/dist/accordion.js" type="module"></script>

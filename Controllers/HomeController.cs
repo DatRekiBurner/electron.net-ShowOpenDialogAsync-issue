@@ -32,17 +32,17 @@ namespace Downloader.Controllers
             {
                 Electron.IpcMain.On("select-directory", async (args) =>
                 {
-                    var mainWindow = Electron.WindowManager.BrowserWindows.First();
-                    var options = new OpenDialogOptions
+                    BrowserWindow mainWindow = Electron.WindowManager.BrowserWindows.First();
+                    OpenDialogOptions options = new()
                     {
-                        Properties = new OpenDialogProperty[] {
-                        OpenDialogProperty.openFile,
-                        OpenDialogProperty.openDirectory
-                    }
+                        Properties = new OpenDialogProperty[]
+                        {
+                            OpenDialogProperty.openDirectory
+                        }
                     };
 
-                    string[] files = await Electron.Dialog.ShowOpenDialogAsync(mainWindow, options);
-                    Electron.IpcMain.Send(mainWindow, "select-directory-reply", files);
+                    string[] path = await Electron.Dialog.ShowOpenDialogAsync(mainWindow, options);
+                    Electron.IpcMain.Send(mainWindow, "select-directory-reply", path);
                 });
             }
 

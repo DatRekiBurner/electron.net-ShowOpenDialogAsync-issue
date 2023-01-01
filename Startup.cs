@@ -1,4 +1,5 @@
 using ElectronNET.API;
+using ElectronNET.API.Entities;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -58,14 +59,27 @@ namespace Downloader
                     pattern: "{controller=Home}/{action=Index}/{id?}");
             });
 
-            Task.Run(async () =>
+            if (HybridSupport.IsElectronActive)
+                ElectronBootstrap();
+        }
+
+        public async void ElectronBootstrap()
+        {
+            //int minSize = 512;
+            BrowserWindowOptions options = new()
             {
-                //int minSize = 512;
-                BrowserWindow window = await Electron.WindowManager.CreateWindowAsync();
-                window.SetTitle("Downloader");
-                //window.SetMinimumSize(minSize, minSize);
-                //window.RemoveMenu();
-            });
+                Width = 1152,
+                Height = 940,
+                Show = false
+            };
+
+            BrowserWindow window = await Electron.WindowManager.CreateWindowAsync(options);
+            await window.WebContents.Session.ClearCacheAsync();
+
+            window.OnReadyToShow += () => window.Show();
+            window.SetTitle("Downloader");
+            //window.SetMinimumSize(minSize, minSize);
+            //window.RemoveMenu();
         }
     }
 }
