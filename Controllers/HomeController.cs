@@ -3,13 +3,17 @@ using Downloader.Models;
 using ElectronNET.API;
 using ElectronNET.API.Entities;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Formatters;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Primitives;
 using MimeTypes;
-using Newtonsoft.Json.Linq;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
+using System.Linq;
+using System.Net.Http;
 using System.Net.Http.Handlers;
+using System.Threading.Tasks;
 
 namespace Downloader.Controllers
 {
@@ -31,11 +35,10 @@ namespace Downloader.Controllers
                     var mainWindow = Electron.WindowManager.BrowserWindows.First();
                     var options = new OpenDialogOptions
                     {
-                        Properties = new OpenDialogProperty[]
-                        {
-                            OpenDialogProperty.openFile,
-                            OpenDialogProperty.openDirectory
-                        }
+                        Properties = new OpenDialogProperty[] {
+                        OpenDialogProperty.openFile,
+                        OpenDialogProperty.openDirectory
+                    }
                     };
 
                     string[] files = await Electron.Dialog.ShowOpenDialogAsync(mainWindow, options);
@@ -51,7 +54,7 @@ namespace Downloader.Controllers
         {
             Uri url = new(Request.Form["download-url"].ToString(), UriKind.Absolute);
             // The path of where the file will be saved.
-            string path = Request.Form["selected-directory"].ToString();
+            string path = Request.Form["location"].ToString();
             Console.WriteLine($"Path: {path}");
 
             HttpClientHandler handler = new() { AllowAutoRedirect = true };
@@ -98,7 +101,10 @@ namespace Downloader.Controllers
             HttpResponseMessage result = await client.SendAsync(requestMessage);
 
             // Figure out what extension to use for the content we're about to download.
-            string extension = MimeTypeMap.GetExtension(result.Content.Headers.ContentType.GetMediaType());
+            string extension = MimeTypeMap.GetExtension(result.Content.Headers.ContentType.GetMediaType(), false);
+            if (string.IsNullOrEmpty(extension))
+                extension = ".file";
+
             // Update path to include filename/extension.
             path = Path.Combine(path, Path.GetFileNameWithoutExtension(url.LocalPath) + extension);
 
