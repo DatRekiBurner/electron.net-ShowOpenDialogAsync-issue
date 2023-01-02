@@ -1,5 +1,4 @@
-﻿using Downloader.Core.Extensions;
-using Downloader.Models;
+﻿using Downloader.Models;
 using ElectronNET.API;
 using ElectronNET.API.Entities;
 using Microsoft.AspNetCore.Mvc;
@@ -42,8 +41,8 @@ namespace Downloader.Controllers
                         }
                     };
 
-                    string path = (await Electron.Dialog.ShowOpenDialogAsync(mainWindow, options)).First();
-                    Electron.IpcMain.Send(mainWindow, "select-directory-reply", path);
+                    string[] paths = await Electron.Dialog.ShowOpenDialogAsync(mainWindow, options);
+                    Electron.IpcMain.Send(mainWindow, "select-directory-reply", paths);
                 });
             }
 
@@ -51,29 +50,8 @@ namespace Downloader.Controllers
         }
 
         [HttpPost]
-        public IActionResult Download()
+        public IActionResult Test()
         {
-            DownloadModel model = new()
-            {
-                Url = new Uri(Request.Form["download-url"].ToString(), UriKind.Absolute),
-                Path = Request.Form["location"].ToString(),
-                SelectHttpMethod = Request.Form["request-type"].ToString()
-            };
-
-            List<string> headerKeys = Request.Form["header-key"].ConvertToList();
-            List<string> headerValues = Request.Form["header-value"].ConvertToList();
-
-            // Add header keys and values into a single dictionary.
-            if (headerKeys.Count > 0 && headerValues.Count > 0)
-                model.Headers = Enumerable.Zip(headerKeys, headerValues).ToDictionary(x => x.First, x => x.Second);
-
-            // Set a custom timeout duration if the user added any.
-            if (int.TryParse(Request.Form["timeout"].ToString(), out int time))
-                model.Timeout = TimeSpan.FromSeconds(time);
-
-            Thread thread = new(() => Core.Download.Start(model));
-            thread.Start();
-
             return View();
         }
 

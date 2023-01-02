@@ -4,6 +4,8 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"]</title>
+    <!-- Meta -->
+    @RenderSection("Meta", false)
     <!-- CSS -->
     <partial name="~/Views/Shared/Partials/Layout/_Css.cshtml" />
     <!-- Other CSS -->
@@ -13,7 +15,7 @@
     <header>
         <nav class="">
             <div class="nav-element">
-                <a asp-area="" asp-controller="Home" asp-action="Index">Test</a>
+                <a asp-area="" asp-controller="Home" asp-action="Index">Home</a>
             </div>
         </nav>
     </header>
@@ -24,7 +26,9 @@
     </div>
 
     <footer class="">
-        <a>Footer</a>
+        <div class="nav-element">
+            <a>Footer</a>
+        </div>
     </footer>
     <!-- Electron -->
     @RenderSection("Electron", false)

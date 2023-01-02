@@ -1,0 +1,10 @@
+﻿@{
+    string url = GetBaseUrl(Context.Request);
+    int time = 3;
+}
+
+@section Meta {
+    <meta http-equiv="refresh" content="@time; URL=@url" />
+}
+
+<p>If you are not redirected within @time seconds, click <a href="@url">here</a></p>

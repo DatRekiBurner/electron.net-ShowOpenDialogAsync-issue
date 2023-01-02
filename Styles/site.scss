@@ -1,5 +1,6 @@
-﻿@use 'breakpoints' as *;
-@use 'theme' as *;
+﻿$bg: #333333;
+$bg-text: white;
+$bg-text-hover: darken($bg-text, 20%);
 
 html,
 body {
@@ -16,15 +17,15 @@ html {
         header,
         footer {
             padding: 0 2em;
-            background-color: $nav;
+            background-color: $bg;
 
             a {
-                color: $nav-text;
+                color: $bg-text;
                 text-decoration: none;
 
                 &:hover,
                 &:focus {
-                    color: $nav-text-hover;
+                    color: $bg-text-hover;
                 }
             }
         }
@@ -40,13 +41,50 @@ html {
             }
         }
 
-        footer {}
+        footer {
+            padding: 1em;
+        }
 
         #main-container {
             flex-grow: 1;
 
             main {
+                text-align: center;
 
+                #form-section {
+                    $width: 15em;
+                    $height: 3em;
+                    $margin: 1em;
+
+                    padding: 2em;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+    
+                    button,
+                    span {
+                        background-color: $bg;
+                        color: $bg-text;
+                        text-align: center;
+                        padding: 1em;
+                        margin-top: 1em;
+                        border: none;
+                    }
+
+                    span {
+                        display: none;
+                        min-width: $width;
+                    }
+
+                    button {
+                        width: $width;
+                        height: $height;
+    
+                        &:hover {
+                            color: $bg-text-hover;
+                        }
+                    }
+                }
             }
         }
     }

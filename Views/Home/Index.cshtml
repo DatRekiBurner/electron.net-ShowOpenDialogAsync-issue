@@ -1,8 +1,4 @@
-﻿@section Css {
-    <link rel="stylesheet" href="~/css/areas/default/home/index.css" asp-append-version="true" />
-}
-
-@section Electron {
+﻿@section Electron {
     <script>
         (function () {
             const { ipcRenderer } = require("electron");
@@ -12,99 +8,19 @@
             });
 
             ipcRenderer.on("select-directory-reply", (sender, path) => {
-                document.getElementById("selected-directory").innerText = `${path}`;
+                const element = document.getElementById("selected-directory");
+                element.innerText = `${path}`;
+                element.style.display = "block";
             });
         }());
     </script>
 }
 
-@section Js {
-    <script>
-        new Accordion('.accordion-container');
+<div id="form-section">
+    <button id="select-directory">Select location</button>
+    <span id="selected-directory"></span>
 
-        function checkValues() {
-            const text = document.getElementById("selected-directory").innerText;
-            document.getElementById("location").value = text;
-            document.getElementById('download-form').submit();
-        }
-    </script>
-}
-
-<div id="download-section">
-    <button class="demo-button" id="select-directory">Select location</button>
-    
-
-    <form id="download-form" method="post" enctype="multipart/form-data" asp-antiforgery="true" asp-area="" asp-controller="Home" asp-action="Download">
-        <input id="download-url" name="download-url" type="url" min="4" placeholder="Type the url here" required />
-
-        <!-- https://github.com/michu2k/Accordion -->
-        <!-- Advanced options -->
-        <div class="accordion-container">
-            <div class="ac">
-                <h2 class="ac-header">
-                    <button type="button" class="ac-trigger">Advanced Options</button>
-                </h2>
-                <div class="ac-panel">
-                    <div id="advanced-options">
-                        <ul>
-                            <!-- General options -->
-                            <li>
-                                <h3>General</h3>
-                                <ul id="general-options">
-                                    <li class="single-item">
-                                        <label for="request-type">Request type</label>
-                                        <select id="request-type" name="request-type">
-                                            <option value="Get" selected>Get</option>
-                                            <option value="Post">Post</option>
-                                            <option value="Put">Put</option>
-                                            <option value="Patch">Patch</option>
-                                            <option value="Delete">Delete</option>
-                                        </select>
-                                    </li>
-                                    <li class="single-item">
-                                        <label for="timeout">Timeout</label>
-                                        <input id="timeout" name="timeout" type="number" min="30" placeholder="Timeout in seconds." />
-                                    </li>
-                                </ul>
-                            </li>
-                            <!-- Header options -->
-                            <li>
-                                <h3>Headers</h3>
-                                <ul id="header-options">
-                                    <li class="double-items">
-                                        <div class="header-key">
-                                            <label for="header-key">Key</label>
-                                            <input name="header-key" type="text" />
-                                        </div>
-                                        <div class="header-value">
-                                            <label for="header-value">Value</label>
-                                            <input name="header-value" type="text" />
-                                        </div>
-                                    </li>
-                                    <li class="double-items">
-                                        <div class="header-key">
-                                            <label for="header-key">Key</label>
-                                            <input name="header-key" type="text" />
-                                        </div>
-                                        <div class="header-value">
-                                            <label for="header-value">Value</label>
-                                            <input name="header-value" type="text" />
-                                        </div>
-                                    </li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Hidden values -->
-        <div class="hide">
-            <span id="selected-directory"></span>
-            <input id="location" name="location" />
-        </div>
-
-        <button id="submit-download" onclick="checkValues();">Download</button>
+    <form id="test-form" method="post" enctype="multipart/form-data" asp-antiforgery="true" asp-area="" asp-controller="Home" asp-action="Test">
+        <button id="submit-form">Continue</button>
     </form>
 </div>

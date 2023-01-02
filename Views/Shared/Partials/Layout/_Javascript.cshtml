@@ -5,16 +5,5 @@
 	delete window.exports;
 	delete window.module;
 </script>
-<!-- Libraries -->
-<environment include="Development">
-	@* Development *@
-	<script src="~/lib/accordion-js/dist/accordion.js" type="module"></script>
-	<script src=""></script>
-</environment>
-<environment exclude="Development">
-	@* Production *@
-	<script src="~/lib/accordion-js/dist/accordion.min.js"></script>
-	<script src=""></script>
-</environment>
 <!-- General -->
 <script src="~/js/site.js" asp-append-version="true"></script>
