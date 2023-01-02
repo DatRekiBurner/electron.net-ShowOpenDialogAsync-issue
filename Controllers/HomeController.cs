@@ -13,6 +13,7 @@ using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Handlers;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Downloader.Controllers
@@ -30,7 +31,6 @@ namespace Downloader.Controllers
         {
             if (HybridSupport.IsElectronActive)
             {
-                Console.WriteLine($"one");
                 Electron.IpcMain.On("select-directory", async (args) =>
                 {
                     BrowserWindow mainWindow = Electron.WindowManager.BrowserWindows.First();
@@ -51,86 +51,30 @@ namespace Downloader.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Download()
+        public IActionResult Download()
         {
-            Uri url = new(Request.Form["download-url"].ToString(), UriKind.Absolute);
-            // The path of where the file will be saved.
-            string path = Request.Form["location"].ToString();
-            Console.WriteLine($"Path: {path}");
-
-            HttpClientHandler handler = new() { AllowAutoRedirect = true };
-            ProgressMessageHandler progressHandler = new(handler);
-            using HttpClient client = new(progressHandler);
-
-            Dictionary<string, string> headers = new();
-            List<string> headerKeys = Request.Form["header-key"].ConvertToList();
-            List<string> headerValues = Request.Form["header-value"].ConvertToList();
-            string selectHttpMethod = Request.Form["request-type"].ToString();
-            TimeSpan timeout = TimeSpan.FromSeconds(100);
-
-            if (headerKeys.Count > 0 && headerValues.Count > 0)
-                headers = Enumerable.Zip(headerKeys, headerValues).ToDictionary(x => x.First, x => x.Second);
-
-            HttpMethod httpMethod = selectHttpMethod switch
+            DownloadModel model = new()
             {
-                "Post" => HttpMethod.Post,
-                "Put" => HttpMethod.Put,
-                "Patch" => HttpMethod.Patch,
-                "Delete" => HttpMethod.Delete,
-                _ => HttpMethod.Get,
+                Url = new Uri(Request.Form["download-url"].ToString(), UriKind.Absolute),
+                Path = Request.Form["location"].ToString(),
+                SelectHttpMethod = Request.Form["request-type"].ToString()
             };
 
-            using HttpRequestMessage requestMessage = new(httpMethod, url);
+            List<string> headerKeys = Request.Form["header-key"].ConvertToList();
+            List<string> headerValues = Request.Form["header-value"].ConvertToList();
 
-            // Add headers if user passed any via the form.
-            if (headers.Count > 0)
-                foreach (KeyValuePair<string, string> header in headers)
-                    requestMessage.Headers.Add(header.Key, header.Value);
+            // Add header keys and values into a single dictionary.
+            if (headerKeys.Count > 0 && headerValues.Count > 0)
+                model.Headers = Enumerable.Zip(headerKeys, headerValues).ToDictionary(x => x.First, x => x.Second);
 
             // Set a custom timeout duration if the user added any.
             if (int.TryParse(Request.Form["timeout"].ToString(), out int time))
-                timeout = TimeSpan.FromSeconds(time);
+                model.Timeout = TimeSpan.FromSeconds(time);
 
-            // Get progress from download/upload.
-            progressHandler.HttpSendProgress += new EventHandler<HttpProgressEventArgs>(HttpProgress);
-            progressHandler.HttpReceiveProgress += new EventHandler<HttpProgressEventArgs>(HttpProgress);
+            Thread thread = new(() => Core.Download.Start(model));
+            thread.Start();
 
-            // Set timeout duration.
-            client.Timeout = timeout;
-
-            // Send request.
-            HttpResponseMessage result = await client.SendAsync(requestMessage);
-
-            // Figure out what extension to use for the content we're about to download.
-            string extension = MimeTypeMap.GetExtension(result.Content.Headers.ContentType.GetMediaType(), false);
-            if (string.IsNullOrEmpty(extension))
-                extension = ".file";
-
-            // Update path to include filename/extension.
-            path = Path.Combine(path, Path.GetFileNameWithoutExtension(url.LocalPath) + extension);
-
-            // Create stream from content
-            using Stream content = await result.Content.ReadAsStreamAsync();
-            // Create new file stream.
-            using FileStream file = new(path, FileMode.Create);
-            // Steam content to file.
-            await content.CopyToAsync(file);
-
-            Console.WriteLine($"Downloaded file to: {path}");
-
-            // To do:
-            // Make download happen in a seperate thread.
-            // Add more extensions based on MIME type `https://www.iana.org/assignments/media-types/media-types.xhtml`.
-            // Allow user to select location the file is saved to.
-            // Implement progress bar with `https://www.jsdelivr.com/package/npm/@loadingio/loading-bar`.
-            // Update progress bar with Ajax.
-
-            return RedirectToAction("index", "home");
-        }
-
-        private void HttpProgress(object? sender, HttpProgressEventArgs e)
-        {
-            Console.WriteLine($"progress: {(double)e.BytesTransferred / e.TotalBytes}");
+            return View();
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
