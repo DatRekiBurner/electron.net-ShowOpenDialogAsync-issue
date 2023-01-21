@@ -4,6 +4,7 @@
             const { ipcRenderer } = require("electron");
 
             document.getElementById("select-directory").addEventListener("click", () => {
+                alert("select-directory has been clicked!");
                 ipcRenderer.send("select-directory");
             });
 
@@ -20,7 +21,7 @@
     <button id="select-directory">Select location</button>
     <span id="selected-directory"></span>
 
-    <form id="test-form" method="post" enctype="multipart/form-data" asp-antiforgery="true" asp-area="" asp-controller="Home" asp-action="Test">
+    <form id="test-form" method="post" enctype="multipart/form-data" asp-antiforgery="true" asp-area="" asp-controller="Home" asp-action="Redirect">
         <button id="submit-form">Continue</button>
     </form>
 </div>

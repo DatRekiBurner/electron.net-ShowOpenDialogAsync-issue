@@ -60,7 +60,7 @@ html {
                     display: flex;
                     flex-direction: column;
                     align-items: center;
-    
+
                     button,
                     span {
                         background-color: $bg;
@@ -79,10 +79,23 @@ html {
                     button {
                         width: $width;
                         height: $height;
-    
+
                         &:hover {
                             color: $bg-text-hover;
                         }
+                    }
+                }
+
+                #text-container {
+                    width: fit-content;
+                    margin: 1em auto auto auto;
+                    background-color: $bg;
+                    color: $bg-text;
+                    text-align: center;
+                    padding: 1em;
+
+                    a {
+                        color: deepskyblue;
                     }
                 }
             }

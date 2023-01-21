@@ -33,7 +33,7 @@ namespace Downloader.Controllers
         }
 
         [HttpPost]
-        public IActionResult Test()
+        public IActionResult Redirect()
         {
             return View();
         }
